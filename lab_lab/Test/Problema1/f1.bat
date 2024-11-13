@@ -15,35 +15,41 @@ if "%~2"=="" (
 set SUBDIRECTOR=%1
 set FISIER=%2
 
-:: Cream subdirectorul ?i schimbam directorul curent
+:: Verificam daca optiune.exe exista in directorul curent (inainte de a schimba directorul)
+if not exist ".\optiune.exe" (
+    echo optiune.exe not found. Exiting loop.
+    exit /b 1
+)
+
+:: Cream subdirectorul si schimbam directorul curent
 mkdir "%SUBDIRECTOR%"
 cd "%SUBDIRECTOR%"
 
 :loop
 :: Apelam programul C meniu.exe
-if not exist "D:\SO\Test\Problema1\optiune.exe" (
+if not exist "..\optiune.exe" (
     echo optiune.exe not found. Exiting loop.
     goto end
 )
 
-"D:\SO\Test\Problema1\optiune.exe"
+..\optiune
 set "MENIU_RET=%ERRORLEVEL%"
 
-:: In func?ie de op?iunea selectata, executam ac?iunile
+:: In functie de optiunea selectata, executam actiunile
 if "%MENIU_RET%"=="1" (
-    echo Opera?iune Œnceputa > "%FISIER%.LOG"
+    echo Operatiune inceputa > "%FISIER%.LOG"
 ) else if "%MENIU_RET%"=="2" (
     if exist "%FISIER%.LOG" (
         echo Adaugare data si ora in fisier...
         echo %date% %time% >> "%FISIER%.LOG"
     ) else (
-        echo Fi?ierul %FISIER%.LOG nu exista, relua?i pasul 1.
+        echo Fisierul %FISIER%.LOG nu exista, reluati pasul 1.
     )
 ) else if "%MENIU_RET%"=="3" (
     if exist "%FISIER%.LOG" (
         type "%FISIER%.LOG"
     ) else (
-        echo Fi?ierul %FISIER%.LOG nu exista, relua?i pasul 1.
+        echo Fisierul %FISIER%.LOG nu exista, reluati pasul 1.
     )
 ) else if "%MENIU_RET%"=="4" (
     echo Iesire.
@@ -55,6 +61,6 @@ if "%MENIU_RET%"=="1" (
 goto loop
 
 :end
-:: Afi?am directorul curent ?i revenim Œn directorul parinte
+:: Afisam directorul curent si revenim in directorul parinte
 cd ..
 endlocal
